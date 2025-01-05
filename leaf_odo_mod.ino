@@ -77,7 +77,13 @@ const char* const EEPROM_DATA[] PROGMEM = {
 
 static Eeprom24C04_16 eeprom(EEPROM_ADDR);
 
-
+/*
+  * Generate the odometer blocks for the odometer value.
+  * The odometer encoding is done by dividing the odometer value by a multiple of 2 
+  * and then XORing the result with 0xFFFF.
+  * All of the different blocks are used in the eeprom in various order which I have
+  * figured out through grit and determination.
+*/
 void generateOdometerBlocks(long odometer, byte* normalBlock, byte* reversedBlock) {
   int divisors[] = {128, 64, 32, 16, 8, 4};
   int numDivisors = sizeof(divisors) / sizeof(divisors[0]);
@@ -96,6 +102,13 @@ void generateOdometerBlocks(long odometer, byte* normalBlock, byte* reversedBloc
   }
 }
 
+/*
+  * Create the odometer bytes for the odometer value.
+  * The odometer values are encoded in forward and reverse order.
+  * I think the -7000 and -6000 values are historical values that are used
+  * in the eeprom. I am not sure if they are actually required but the initial known good
+  * dump I have has them so I am including them.
+*/
 void createOdoBytes(long odometer, byte* odoBytes) {
   byte normal[12];
   byte reversed[12];
@@ -205,7 +218,6 @@ void ShowMarker (){
 // this function writes the odometer values to the correct addresses.
 // Values are encoded in the nissan way.
 void writeOdometer(byte * odoBytes, int odoBytesSize) {
-  //byte odoBytes[] = {0xB9,0xF0,0x73,0xE1,0xE7,0xC2,0xCE,0x85,0xBB,0xF8,0x76,0xF1,0xEC,0xE2,0xD8,0xC5,0xF0,0xBA,0xE1,0x75,0xC2,0xEA,0x85,0xD4,0xF8,0xCA,0xCA,0x95,0xF1,0x2A,0x95,0x55};
   word odoAddr = (0x002);
   word odoAddr2 = (0x022);
   
