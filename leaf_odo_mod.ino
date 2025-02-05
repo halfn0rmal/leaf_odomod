@@ -229,11 +229,28 @@ void writeOdometer(byte * odoBytes, int odoBytesSize) {
     if (i < 31) Serial.print(",");
     eeprom.writeByte(odoAddr + i, odoBytes[i]);
     delay(100);
+    // read it back to verify
+    byte r = eeprom.readByte(odoAddr + i);
+    Serial.print(" 0x");
+    if (r < 0x10) Serial.print("0");
+    Serial.print(r, HEX);
+    Serial.print(" ");
+    if (i % 8 == 7) Serial.println();
+    if(r != odoBytes[i]) {
+      Serial.println("Write failed");
+      return;
+    }
   }
 
   for(int i = 0; i < odoBytesSize; i++) {
     eeprom.writeByte(odoAddr2 + i, odoBytes[i]);
     delay(100);
+    // read it back to verify
+    byte r = eeprom.readByte(odoAddr + i);
+    if(r != odoBytes[i]) {
+      Serial.println("Write failed");
+      return;
+    }
   }
 
   Serial.println(F("Wrote odometer data to EEPROM at offsets 0x002 and 0x022"));

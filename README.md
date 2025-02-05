@@ -32,7 +32,12 @@ any manner that is not legitimate and legal.
 
 ## wiring, testing  
 ![odomod_24C16_reader.JPG](odomod_24C16_reader.JPG)  
-  
+
+  purple-blue
+  brown-orange
+  white-green
+  grey-white
+  black-green
   
 ## Result,  
 
